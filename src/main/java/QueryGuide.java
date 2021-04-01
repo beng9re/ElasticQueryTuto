@@ -70,11 +70,22 @@ public class QueryGuide {
                 QueryBuilders.termQuery("DATA_TYPE","ARTICLE")
         );
         System.out.println(query);
-/* } , bool: {                                                                                          */
-        //query.must(
-/*              should : {                                                                              */
-                //boolQueryBuilder.should()
-        //);
+
+/* } , bool: {              */
+
+        BoolQueryBuilder mustBoolQuery = QueryBuilders.boolQuery();
+        BoolQueryBuilder mustShouldBoolQuery = QueryBuilders.boolQuery();
+        mustShouldBoolQuery.should(QueryBuilders.matchPhraseQuery("LIBRARY_TITLE.korean","이상돈").boost(1f));
+
+
+
+        System.out.println(mustShouldBoolQuery);
+        //mustShouldBoolQuery.should(QueryBuilders.matchPhraseQuery("LIBRARY_TITLE.korean","이상돈"));
+//            mustShouldBoolQuery.should(QueryBuilders.matchPhraseQuery("LIBRARY_CONTENTS.korean","이상돈").boost(2.0f));
+//            mustShouldBoolQuery.should(QueryBuilders.matchPhraseQuery("REGISTERED_BY","이상돈").boost(3.0f));
+//
+//        query.must(mustBoolQuery);
+//        System.out.println(query);
 /*  }                        */
     }
 }
