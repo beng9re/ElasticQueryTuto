@@ -1,0 +1,116 @@
+{
+  "from": 0,
+  "size": 10,
+  "query": {
+    "bool": {
+      "must": [{
+        "term": {
+          "LIBRARY_SOURCE": {
+            "value": "example",
+            "boost": 1.0
+          }
+        }
+      }, {
+        "range": {
+          "CREATED_DT": {
+            "from": "2015-01-01 00:00:00",
+            "to": "now",
+            "include_lower": true,
+            "include_upper": true,
+            "format": "yyyy-MM-dd HH:mm:ss",
+            "boost": 1.0
+          }
+        }
+      }, {
+        "term": {
+          "DATA_TYPE": {
+            "value": "ARTICLE"
+          }
+        }
+      }, {
+        "bool": {
+          "should": [{
+            "bool": {
+              "should": [{
+                "match_phrase": {
+                  "LIBRARY_TITLE.korean": {
+                    "query": "이상돈",
+                    "boost": 3.0
+                  }
+                }
+              }, {
+                "match_phrase": {
+                  "LIBRARY_CONTENTS.korean": {
+                    "query": "이상돈",
+                    "boost": 2.0
+                  }
+                }
+              }, {
+                "match_phrase": {
+                  "REGISTERED_BY": {
+                    "query": "이상돈",
+                    "boost": 3.0
+                  }
+                }
+              }]
+            }
+          }]
+        }
+      }],
+      "should": [],
+      "must_not": [{
+        "term": {
+          "LIBRARY_IS_DEPLOY_CANCELED": {
+            "value": "Y",
+            "boost": 1.0
+          }
+        }
+      }]
+    }
+  },
+  "sort": [{
+    "CREATED_DT": {
+      "order": "desc"
+    }
+  },
+    "_score"
+  ],
+  "aggregations": {
+    "section": {
+      "terms": {
+        "field": "LIBRARY_ARTICLE_SECTION_CATEGORY",
+        "size": 10,
+        "min_doc_count": 1,
+        "shard_min_doc_count": 0,
+        "show_term_doc_count_error": false,
+        "order": [{
+          "_count": "desc"
+        }, {
+          "_key": "asc"
+        }]
+      }
+    }
+  },
+  "highlight": {
+    "pre_tags": [
+      "|S|"
+    ],
+    "post_tags": [
+      "|/S|"
+    ],
+    "fields": {
+      "LIBRARY_CONTENTS": {
+        "fragment_size": 1000,
+        "require_field_match": false
+      },
+      "LIBRARY_CONTENTS.korean": {
+        "fragment_size": 1000,
+        "require_field_match": false
+      },
+      "LIBRARY_CONTENTS.english": {
+        "fragment_size": 1000,
+        "require_field_match": false
+      }
+    }
+  }
+}
