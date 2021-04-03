@@ -5,47 +5,12 @@ import org.elasticsearch.index.query.*;
 public class QueryGuide {
 
     public static void main(String[] args) {
-        /*
-        *  QueryBuilders 클래스를 이용하여 부가 쿼리 EX)...TermQuery 등을 만드나 직접 new xxxxQueryBuilder를 하나 동일함
-        *  예시) {
-                  "bool" : {
-                    "must" : [
-                      {
-                        "term" : {
-                          "LIBRARY_SOURCE" : {
-                            "value" : "example",
-                            "boost" : 1.0
-                          }
-                        }
-                      }
-                    ],
-                    "adjust_pure_negative" : true,
-                    "boost" : 1.0
-                  }
-                }
-        * */
-        BoolQueryBuilder boolQueryBuilder =
-                new BoolQueryBuilder().must(new TermQueryBuilder("LIBRARY_SOURCE","example"));
-
-        System.out.printf("boolQueryBuilder ==> \n %s \n" ,boolQueryBuilder);
-
-
-        BoolQueryBuilder boolQueryBuilder2 =
-                QueryBuilders.boolQuery().must(QueryBuilders.termQuery("LIBRARY_SOURCE","example"));
-
-        System.out.printf("boolQueryBuilder2 ==> \n %s \n" ,boolQueryBuilder2);
-
-        if(boolQueryBuilder.toString().equals(boolQueryBuilder2.toString())){
-            System.out.println("서로 같음");
-        }else{
-            System.out.println("다름");
-        }
-
-//        example1.json 참조 query{} 부분 부터 시작
+//        example1.json 참조 하여 query{} 부분 부터 시작
 
 /* "bool" : {                                                                                                */
         BoolQueryBuilder query = QueryBuilders.boolQuery();
-        // must [term,range,term] 시작
+
+// must [term,range,term] 시작
 /* [                                                                                                         */
 /* term : {                                                                                                 */
         query.must(
@@ -72,20 +37,24 @@ public class QueryGuide {
         System.out.println(query);
 
 /* } , bool: {              */
-
+// 예제 31번째 라인
         BoolQueryBuilder mustBoolQuery = QueryBuilders.boolQuery();
-        BoolQueryBuilder mustShouldBoolQuery = QueryBuilders.boolQuery();
+
+        BoolQueryBuilder mustShouldBoolQuery = QueryBuilders.boolQuery(); //31 Line
+        //bool : { should
         mustShouldBoolQuery.should(QueryBuilders.matchPhraseQuery("LIBRARY_TITLE.korean","이상돈").boost(1f));
+        mustShouldBoolQuery.should(QueryBuilders.matchPhraseQuery("LIBRARY_TITLE.korean","이상돈").boost(2f));
+        mustShouldBoolQuery.should(QueryBuilders.matchPhraseQuery("REGISTERED_BY","이상돈").boost(3f));
 
-
-
+        mustBoolQuery.should(mustShouldBoolQuery);
+// 예제 59번째 라인
         System.out.println(mustShouldBoolQuery);
-        //mustShouldBoolQuery.should(QueryBuilders.matchPhraseQuery("LIBRARY_TITLE.korean","이상돈"));
-//            mustShouldBoolQuery.should(QueryBuilders.matchPhraseQuery("LIBRARY_CONTENTS.korean","이상돈").boost(2.0f));
-//            mustShouldBoolQuery.should(QueryBuilders.matchPhraseQuery("REGISTERED_BY","이상돈").boost(3.0f));
-//
-//        query.must(mustBoolQuery);
-//        System.out.println(query);
-/*  }                        */
+
+/* }                                                        */
+        query.mustNot(
+                QueryBuilders.termQuery("LIBRARY_IS_DEPLOY_CANCELED","Y")
+        );
+// 예제 70번째 까지 bool 마무리
+
     }
 }
