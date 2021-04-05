@@ -14,9 +14,9 @@ import org.elasticsearch.search.sort.SortOrder;
 import java.io.IOException;
 
 public class ExampleQueryGuide {
-    private final static String HOST = "localhost";
-    private final static int REST_PORT = 9200;
-    private final static String ES_LIBRARY_SEARCH_INDEX ="ibrary_search";
+    private final static String HOST = "엘라스틱 서치 IP";
+    private final static int REST_PORT = 9200; //엘라스틱 서치 PORT
+    private final static String ES_LIBRARY_SEARCH_INDEX ="library_search";
     private final static String ES_LIBRARY_SEARCH_TYPE ="search";
 
     private QueryBuilder query;
@@ -79,7 +79,9 @@ public class ExampleQueryGuide {
             SearchResponse response =
                     //리퀘스트 시작
                     restClient.search(request, RequestOptions.DEFAULT);
-            System.out.println(response);
+
+            System.out.printf("\n result :: \n %s",response);
+
             restClient.close();
         }catch (IOException e){
             e.printStackTrace();

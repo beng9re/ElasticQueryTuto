@@ -27,12 +27,14 @@ public class SimpleMakeQuery {
                   }
                 }
         * */
+
+        /** 1번째 방법 */
         BoolQueryBuilder boolQueryBuilder =
                 new BoolQueryBuilder().must(new TermQueryBuilder("LIBRARY_SOURCE","example"));
 
         System.out.printf("boolQueryBuilder ==> \n %s \n" ,boolQueryBuilder);
 
-
+        /** 2번째 방법 */
         BoolQueryBuilder boolQueryBuilder2 =
                 QueryBuilders.boolQuery().must(QueryBuilders.termQuery("LIBRARY_SOURCE","example"));
 

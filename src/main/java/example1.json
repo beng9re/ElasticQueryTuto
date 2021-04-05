@@ -71,8 +71,7 @@
     "CREATED_DT": {
       "order": "desc"
     }
-  },
-  ],
+  }],
   "aggregations": {
     "section": {
       "terms": {
